@@ -121,6 +121,31 @@ func chairPostCoordinate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, err := tx.ExecContext(ctx, `
+  UPDATE chairs
+  JOIN (
+    SELECT
+      t1.chair_id,
+      ABS(t1.latitude - t2.latitude) + ABS(t1.longitude - t2.longitude) AS distance
+    FROM
+      chair_locations t1
+    JOIN
+      chair_locations t2
+      ON t1.chair_id = t2.chair_id
+      AND t1.created_at > t2.created_at
+    WHERE
+      t1.chair_id = ?
+    ORDER BY
+      t1.created_at DESC
+    LIMIT 1
+  ) AS distance_data
+  ON chairs.id = distance_data.chair_id
+  SET chairs.total_distance = chairs.total_distance + distance_data.distance
+  `, chair.ID); err != nil {
+		writeError(w, http.StatusInternalServerError, err)
+		return
+	}
+
 	location := &ChairLocation{}
 	if err := tx.GetContext(ctx, location, `SELECT * FROM chair_locations WHERE id = ?`, chairLocationID); err != nil {
 		writeError(w, http.StatusInternalServerError, err)
