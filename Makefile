@@ -1,9 +1,10 @@
-.PHONY: setup analyze init
+.PHONY: setup analyze init start
 init:
 	./sql/init.sh
 setup: 
 	export PATH=$(HOME)/local/golang/bin:$(HOME)/go/bin:$(PATH)
-analyze: alpsave slow-show 
+analyze: alpsave slow-show
+start: slow-on build pprof
 
 
 ALPSORT=sum
