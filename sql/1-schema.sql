@@ -51,9 +51,6 @@ CREATE TABLE chair_locations
 )
   COMMENT = '椅子の現在位置情報テーブル';
 
--- ALTER TABLE chair_locations 
--- ADD INDEX idx_chair_locations_location (chair_id, created_at DESC, latitude, longitude);
-
 ALTER TABLE chair_locations 
 ADD INDEX idx_chair_locations_location (chair_id, created_at DESC);
 
@@ -115,6 +112,9 @@ CREATE TABLE ride_statuses
   PRIMARY KEY (id)
 )
   COMMENT = 'ライドステータスの変更履歴テーブル';
+
+ALTER TABLE ride_statuses 
+ADD INDEX idx_ride_statuses_ride_id (ride_id, created_at);
 
 DROP TABLE IF EXISTS owners;
 CREATE TABLE owners
