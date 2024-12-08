@@ -107,7 +107,7 @@ ALTER TABLE rides
 ADD INDEX idx_rides_chair_id (chair_id, updated_at);
 
 ALTER TABLE rides 
-ADD INDEX idx_rides_user_id (chair_id, created_at DESC);
+ADD INDEX idx_rides_user_id (user_id, created_at DESC);
 
 DROP TABLE IF EXISTS ride_statuses;
 CREATE TABLE ride_statuses
