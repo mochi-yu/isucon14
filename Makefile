@@ -1,4 +1,4 @@
-.PHONY: setup analyze init start
+.PHONY: setup analyze analyze-db init start
 init: build slow-on 
 	./sql/init.sh
 setup: 
@@ -6,6 +6,7 @@ setup:
 analyze: alpsave slow-show
 start: pprof
 
+analyze-db: slow-show slow-on
 
 ALPSORT=sum
 ALPM="/assets/.+,/images/.+,/api/app/rides/[-A-Z0-9]+/evaluation,/api/chair/rides/[-A-Z0-9]+/status,/api/app/nearby-chairs\?,/api/owner/sales\?"
