@@ -47,12 +47,36 @@ CREATE TABLE chair_locations
   latitude   INTEGER     NOT NULL COMMENT '経度',
   longitude  INTEGER     NOT NULL COMMENT '緯度',
   created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '登録日時',
+  total_distance INTEGER NOT NULL DEFAULT 0 COMMENT 'これまでの総距離',
   PRIMARY KEY (id)
 )
   COMMENT = '椅子の現在位置情報テーブル';
 
+delimiter //
+CREATE TRIGGER update_total_distance
+BEFORE INSERT ON chair_locations
+FOR EACH ROW
+BEGIN
+  DECLARE prev_latitude INTEGER;
+  DECLARE prev_longitude INTEGER;
+  DECLARE prev_total_distance INTEGER;
+
+  -- 前回の位置情報を取得
+  SELECT latitude, longitude, total_distance
+  INTO prev_latitude, prev_longitude, prev_total_distance
+  FROM chair_locations
+  WHERE chair_id = NEW.chair_id
+  ORDER BY created_at DESC
+  LIMIT 1;
+
+  -- 距離を計算して更新
+  SET NEW.total_distance = IFNULL(prev_total_distance +
+      ABS(NEW.latitude - prev_latitude) + ABS(NEW.longitude - prev_longitude), 0);
+END;//
+delimiter ;
+
 ALTER TABLE chair_locations 
-ADD INDEX idx_chair_locations_chair_id_created_at (created_at DESC);
+ADD INDEX idx_chair_locations_chair_id_created_at_asc (chair_id, created_at DESC);
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
