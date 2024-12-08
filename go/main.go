@@ -4,7 +4,6 @@ import (
 	crand "crypto/rand"
 	"encoding/json"
 	"fmt"
-	"log"
 	"log/slog"
 	"net"
 	"net/http"
@@ -23,11 +22,6 @@ import (
 var db *sqlx.DB
 
 func main() {
-	// FIXME: 最終的に削除
-	go func() {
-		log.Fatal(http.ListenAndServe(":6060", nil))
-	}()
-
 	mux := setup()
 	slog.Info("Listening on :8080")
 	http.ListenAndServe(":8080", mux)
