@@ -1,9 +1,10 @@
-.PHONY: setup analyze
+.PHONY: setup analyze init
+init:
+	./sql/init.sh
 setup: 
 	export PATH=$(HOME)/local/golang/bin:$(HOME)/go/bin:$(PATH)
-analyze:
-	sudo cp /var/log/nginx/access.log ./log/nginx/access.log
-	sudo chmod 777 ./log/nginx/access.log
+analyze: alpsave slow-show 
+
 
 ALPSORT=sum
 ALPM="/assets/.+,/images/.+,/api/app/rides/[-A-Z0-9]+/evaluation,/api/chair/rides/[-A-Z0-9]+/status,/api/app/nearby-chairs\?,/api/owner/sales\?"
