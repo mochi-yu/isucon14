@@ -48,6 +48,9 @@ CREATE TABLE chair_locations
 )
   COMMENT = '椅子の現在位置情報テーブル';
 
+ALTER TABLE chair_locations 
+ADD INDEX idx_chair_locations_chair_id_created_at (chair_id, created_at DESC);
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users
 (

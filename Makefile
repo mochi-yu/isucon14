@@ -26,7 +26,7 @@ MYSQL=mysql -h$(MYSQL_HOST) -P$(MYSQL_PORT) -u$(MYSQL_USER) -p$(MYSQL_PASS) $(MY
 SLOW_LOG=/tmp/slow-query.log
 # slow-wuery-logを取る設定にする
 # DBを再起動すると設定はリセットされる
-.PHONY: slow-on slow-off slow-show
+.PHONY: slow-on slow-off slow-show db-conn
 slow-on:
 	sudo rm $(SLOW_LOG)
 	sudo systemctl restart mysql
@@ -37,6 +37,8 @@ slow-off:
 # オプションは合計時間ソート
 slow-show:
 	sudo mysqldumpslow -s t $(SLOW_LOG) | head -n 20
+db-conn:
+	$(MYSQL)
 
 # ビルドして、サービスのリスタートを行う
 # リスタートを行わないと反映されないので注意
@@ -48,4 +50,4 @@ build:
 # pprofのデータをwebビューで見る
 # サーバー上で sudo apt install graphvizが必要
 pprof:
-	go tool pprof -http=0.0.0.0:6070 -seconds 120 /home/isucon/webapp/go/isuride http://localhost:6060/debug/pprof/profile 
+	go tool pprof -http=0.0.0.0:6070 -seconds 90 /home/isucon/webapp/go/isuride http://localhost:6060/debug/pprof/profile 
