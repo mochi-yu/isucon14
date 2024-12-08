@@ -48,4 +48,4 @@ build:
 # pprofのデータをwebビューで見る
 # サーバー上で sudo apt install graphvizが必要
 pprof:
-	go tool pprof -http=0.0.0.0:8080 /home/isucon/webapp/go/isuride http://localhost:6060/debug/pprof/profile
+	go tool pprof -http=0.0.0.0:6070 -seconds 120 /home/isucon/webapp/go/isuride http://localhost:6060/debug/pprof/profile 
